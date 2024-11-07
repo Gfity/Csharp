@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace AAAAAAAAAAAAAAAAAAAA
+{
+    /// <summary>
+    /// Логика взаимодействия для MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+            foreach (var u in db.users.ToList())
+            {
+                g.Text += u.login.ToString() + " " + u.password.ToString() + " ";
+            }
+            lab.Visibility = Visibility.Collapsed;
+            box3.Visibility = Visibility.Collapsed;
+            lab1.Visibility = Visibility.Collapsed;
+
+        }
+        bebebeEntities db = new bebebeEntities();
+        Window1 win1 = new Window1();
+        
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            lab1.Visibility = Visibility.Collapsed;
+            if (but.Content.ToString() == "Вход")
+            {
+                int i = 0;
+                foreach (var u in db.users.ToList())
+                {
+                    if (box1.Text == u.login.ToString() & box2.Text == u.password.ToString())
+                    {
+                        win1.Show();
+                        i++;
+                        break;
+                    }
+                }
+                if (i == 0)
+                {
+                    lab1.Visibility = Visibility.Visible;
+                }
+                else
+                {
+
+                    this.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                if ((db.users.ToString().Contains(box1.Text) == false) & box2.Text == box3.Text)
+                {
+                    users bb = new users {login = box1.Text, password = box2.Text};
+                    db.users.Add(bb);
+                    db.SaveChanges();
+                    g.Text = string.Empty;
+                    foreach (var u in db.users.ToList())
+                    {
+                        g.Text += u.login.ToString() + " " + u.password.ToString() + " ";
+                    }
+                }
+            }
+        }
+
+        private void Kenjaku_Click(object sender, RoutedEventArgs e)
+        {
+            box1.Text = string.Empty;
+            box2.Text = string.Empty;
+            box3.Text = string.Empty;
+            lab1.Visibility = Visibility.Collapsed;
+            if (Kenjaku.Content.ToString() == "Регистрация")
+            {
+                Kenjaku.Content = "Назад";
+                but.Content = "Регистрация";
+                lab.Visibility = Visibility.Visible;
+                box3.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Kenjaku.Content = "Регистрация";
+                but.Content = "Вход";
+                lab.Visibility = Visibility.Collapsed;
+                box3.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+}
